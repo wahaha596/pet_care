@@ -1,11 +1,32 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+const spaceIds = ["lounge", "bath", "cat"];
 
 export default function Home() {
   const [activePricePanel, setActivePricePanel] = useState("dogs");
   const [activeSpace, setActiveSpace] = useState("lounge");
   const [confirmation, setConfirmation] = useState("");
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setActiveSpace((currentSpace) => {
+        const currentIndex = spaceIds.indexOf(currentSpace);
+        return spaceIds[(currentIndex + 1) % spaceIds.length];
+      });
+    }, 4500);
+
+    return () => window.clearInterval(timer);
+  }, []);
+
+  function showSpace(step) {
+    setActiveSpace((currentSpace) => {
+      const currentIndex = spaceIds.indexOf(currentSpace);
+      const nextIndex = (currentIndex + step + spaceIds.length) % spaceIds.length;
+      return spaceIds[nextIndex];
+    });
+  }
 
   function handleBookingSubmit(event) {
     event.preventDefault();
@@ -17,12 +38,13 @@ export default function Home() {
     const kind = formData.get("kind");
     const service = formData.get("service");
     const time = `${formData.get("timeDate")} ${formData.get("time")}`;
+    const arrival = formData.get("arrival");
     const note = formData.get("note");
 
     setConfirmation(
       note
-        ? `${owner}，已为 ${pet}（${kind}）登记 ${time} 的 ${service} 意向预约。备注已记录：${note}。门店会通过您填写的电话尽快确认。`
-        : `${owner}，已为 ${pet}（${kind}）登记 ${time} 的 ${service} 意向预约。门店会通过您填写的电话尽快确认。`,
+        ? `${owner}，已为 ${pet}（${kind}）登记 ${time} 到店，偏好 ${arrival}，预约项目为 ${service}。备注已记录：${note}。门店会通过您填写的电话尽快确认。`
+        : `${owner}，已为 ${pet}（${kind}）登记 ${time} 到店，偏好 ${arrival}，预约项目为 ${service}。门店会通过您填写的电话尽快确认。`,
     );
 
     form.reset();
@@ -291,6 +313,24 @@ export default function Home() {
                       <span>更低刺激、更安静、更柔和，明确和狗狗区域区分开来。</span>
                     </figcaption>
                   </figure>
+                  <button className="carousel-control carousel-control-prev" type="button" aria-label="上一张门店环境图片" onClick={() => showSpace(-1)}>
+                    ‹
+                  </button>
+                  <button className="carousel-control carousel-control-next" type="button" aria-label="下一张门店环境图片" onClick={() => showSpace(1)}>
+                    ›
+                  </button>
+                  <div className="carousel-dots" aria-label="门店环境轮播进度">
+                    {spaceIds.map((spaceId, index) => (
+                      <button
+                        className={`carousel-dot ${activeSpace === spaceId ? "active" : ""}`}
+                        type="button"
+                        key={spaceId}
+                        aria-label={`切换到第 ${index + 1} 张门店环境图片`}
+                        aria-current={activeSpace === spaceId ? "true" : undefined}
+                        onClick={() => setActiveSpace(spaceId)}
+                      />
+                    ))}
+                  </div>
                 </div>
                 <div className="carousel-nav">
                   <button className={`space-card ${activeSpace === "lounge" ? "active" : ""}`} type="button" data-space-target="lounge" onClick={() => setActiveSpace("lounge")}>
@@ -445,9 +485,9 @@ export default function Home() {
                       <option value="单项加购">单项加购</option>
                     </select>
                   </div>
-                  <div className="field">
-                    <label htmlFor="time">意向时段</label>
-                    <div className="time-pair">
+                  <div className="field arrival-field">
+                    <label htmlFor="timeDate">期望到店</label>
+                    <div className="arrival-pair">
                       <input id="timeDate" name="timeDate" type="date" required />
                       <select id="time" name="time" required>
                         <option value="">请选择时间</option>
@@ -469,6 +509,12 @@ export default function Home() {
                         <option value="17:30">17:30</option>
                         <option value="18:00">18:00</option>
                         <option value="18:30">18:30</option>
+                      </select>
+                      <select id="arrival" name="arrival" aria-label="到店偏好" required>
+                        <option value="">到店偏好</option>
+                        <option value="准时到店">准时到店</option>
+                        <option value="可能提前 10 分钟">可能提前 10 分钟</option>
+                        <option value="需要电话确认后到店">需要电话确认后到店</option>
                       </select>
                     </div>
                   </div>

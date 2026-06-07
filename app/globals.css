@@ -543,6 +543,67 @@
       font-size: 0.94rem;
     }
 
+    .carousel-control {
+      position: absolute;
+      top: 50%;
+      z-index: 3;
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.34);
+      border-radius: 50%;
+      background: rgba(13, 30, 34, 0.48);
+      color: #fff;
+      font-size: 2rem;
+      line-height: 1;
+      cursor: pointer;
+      transform: translateY(-50%);
+      transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .carousel-control:hover,
+    .carousel-control:focus-visible {
+      background: rgba(20, 108, 99, 0.74);
+      border-color: rgba(255, 255, 255, 0.58);
+      transform: translateY(-50%) scale(1.04);
+    }
+
+    .carousel-control-prev {
+      left: 16px;
+    }
+
+    .carousel-control-next {
+      right: 16px;
+    }
+
+    .carousel-dots {
+      position: absolute;
+      left: 50%;
+      bottom: 18px;
+      z-index: 3;
+      display: flex;
+      gap: 8px;
+      transform: translateX(-50%);
+    }
+
+    .carousel-dot {
+      width: 9px;
+      height: 9px;
+      padding: 0;
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.22);
+      cursor: pointer;
+      transition: width 0.2s ease, background-color 0.2s ease;
+    }
+
+    .carousel-dot.active {
+      width: 24px;
+      border-radius: 999px;
+      background: #8fd0c8;
+    }
+
     .carousel-nav {
       display: grid;
       gap: 12px;
@@ -1027,6 +1088,12 @@
       gap: 10px;
     }
 
+    .arrival-pair {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 0.78fr) minmax(0, 1fr);
+      gap: 10px;
+    }
+
     .field label {
       font-size: 0.96rem;
       font-weight: 800;
@@ -1188,12 +1255,31 @@
       .contact-blocks,
       .booking-form-wide .form-grid,
       .time-pair,
+      .arrival-pair,
       .form-grid {
         grid-template-columns: 1fr;
       }
 
       .carousel-stage {
         min-height: 360px;
+      }
+
+      .carousel-control {
+        width: 36px;
+        height: 36px;
+        font-size: 1.7rem;
+      }
+
+      .carousel-control-prev {
+        left: 10px;
+      }
+
+      .carousel-control-next {
+        right: 10px;
+      }
+
+      .carousel-dots {
+        bottom: 12px;
       }
 
       .location-panel {
@@ -1242,4 +1328,3 @@
         flex-direction: column;
       }
     }
-  
