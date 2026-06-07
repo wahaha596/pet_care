@@ -9,23 +9,22 @@ export default function Home() {
   const [activeSpace, setActiveSpace] = useState("lounge");
   const [confirmation, setConfirmation] = useState("");
 
+  function getNextSpace(currentSpace, step) {
+    const currentIndex = Math.max(spaceIds.indexOf(currentSpace), 0);
+    const nextIndex = (currentIndex + step + spaceIds.length) % spaceIds.length;
+    return spaceIds[nextIndex];
+  }
+
   useEffect(() => {
     const timer = window.setInterval(() => {
-      setActiveSpace((currentSpace) => {
-        const currentIndex = spaceIds.indexOf(currentSpace);
-        return spaceIds[(currentIndex + 1) % spaceIds.length];
-      });
+      setActiveSpace((currentSpace) => getNextSpace(currentSpace, 1));
     }, 4500);
 
     return () => window.clearInterval(timer);
   }, []);
 
   function showSpace(step) {
-    setActiveSpace((currentSpace) => {
-      const currentIndex = spaceIds.indexOf(currentSpace);
-      const nextIndex = (currentIndex + step + spaceIds.length) % spaceIds.length;
-      return spaceIds[nextIndex];
-    });
+    setActiveSpace((currentSpace) => getNextSpace(currentSpace, step));
   }
 
   function handleBookingSubmit(event) {

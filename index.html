@@ -514,12 +514,14 @@
       inset: 0;
       opacity: 0;
       pointer-events: none;
+      z-index: 1;
       transition: opacity 0.45s ease;
     }
 
     .carousel-slide.active {
       opacity: 1;
       pointer-events: auto;
+      z-index: 2;
     }
 
     .carousel-slide img {
@@ -548,6 +550,67 @@
       margin-top: 8px;
       color: rgba(255, 255, 255, 0.82);
       font-size: 0.94rem;
+    }
+
+    .carousel-control {
+      position: absolute;
+      top: 50%;
+      z-index: 3;
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.34);
+      border-radius: 50%;
+      background: rgba(13, 30, 34, 0.48);
+      color: #fff;
+      font-size: 2rem;
+      line-height: 1;
+      cursor: pointer;
+      transform: translateY(-50%);
+      transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .carousel-control:hover,
+    .carousel-control:focus-visible {
+      background: rgba(20, 108, 99, 0.74);
+      border-color: rgba(255, 255, 255, 0.58);
+      transform: translateY(-50%) scale(1.04);
+    }
+
+    .carousel-control-prev {
+      left: 16px;
+    }
+
+    .carousel-control-next {
+      right: 16px;
+    }
+
+    .carousel-dots {
+      position: absolute;
+      left: 50%;
+      bottom: 18px;
+      z-index: 3;
+      display: flex;
+      gap: 8px;
+      transform: translateX(-50%);
+    }
+
+    .carousel-dot {
+      width: 9px;
+      height: 9px;
+      padding: 0;
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.22);
+      cursor: pointer;
+      transition: width 0.2s ease, background-color 0.2s ease;
+    }
+
+    .carousel-dot.active {
+      width: 24px;
+      border-radius: 999px;
+      background: #8fd0c8;
     }
 
     .carousel-nav {
@@ -1512,6 +1575,13 @@
                 <span>更低刺激、更安静、更柔和，明确和狗狗区域区分开来。</span>
               </figcaption>
             </figure>
+            <button class="carousel-control carousel-control-prev" type="button" aria-label="上一张门店环境图片">‹</button>
+            <button class="carousel-control carousel-control-next" type="button" aria-label="下一张门店环境图片">›</button>
+            <div class="carousel-dots" aria-label="门店环境轮播进度">
+              <button class="carousel-dot active" type="button" aria-label="切换到第 1 张门店环境图片" aria-current="true" data-space-dot="lounge"></button>
+              <button class="carousel-dot" type="button" aria-label="切换到第 2 张门店环境图片" data-space-dot="bath"></button>
+              <button class="carousel-dot" type="button" aria-label="切换到第 3 张门店环境图片" data-space-dot="cat"></button>
+            </div>
           </div>
           <div class="carousel-nav">
             <button class="space-card active" type="button" data-space-target="lounge">
@@ -1772,20 +1842,63 @@
 
     const spaceCards = document.querySelectorAll(".space-card");
     const spaceSlides = document.querySelectorAll(".carousel-slide");
+    const spaceDots = document.querySelectorAll(".carousel-dot");
+    const spaceIds = Array.from(spaceSlides).map((slide) => slide.dataset.spacePanel);
+    let activeSpace = spaceIds.find((spaceId) => {
+      return document.querySelector(`.carousel-slide[data-space-panel="${spaceId}"]`)?.classList.contains("active");
+    }) || spaceIds[0];
+
+    function setActiveSpace(target) {
+      activeSpace = target;
+
+      spaceCards.forEach((card) => {
+        card.classList.toggle("active", card.dataset.spaceTarget === target);
+      });
+
+      spaceSlides.forEach((slide) => {
+        slide.classList.toggle("active", slide.dataset.spacePanel === target);
+      });
+
+      spaceDots.forEach((dot) => {
+        const isActive = dot.dataset.spaceDot === target;
+        dot.classList.toggle("active", isActive);
+        if (isActive) {
+          dot.setAttribute("aria-current", "true");
+        } else {
+          dot.removeAttribute("aria-current");
+        }
+      });
+    }
+
+    function showSpace(step) {
+      const currentIndex = Math.max(spaceIds.indexOf(activeSpace), 0);
+      const nextIndex = (currentIndex + step + spaceIds.length) % spaceIds.length;
+      setActiveSpace(spaceIds[nextIndex]);
+    }
 
     spaceCards.forEach((card) => {
       card.addEventListener("click", () => {
-        const target = card.dataset.spaceTarget;
-
-        spaceCards.forEach((item) => {
-          item.classList.toggle("active", item === card);
-        });
-
-        spaceSlides.forEach((slide) => {
-          slide.classList.toggle("active", slide.dataset.spacePanel === target);
-        });
+        setActiveSpace(card.dataset.spaceTarget);
       });
     });
+
+    spaceDots.forEach((dot) => {
+      dot.addEventListener("click", () => {
+        setActiveSpace(dot.dataset.spaceDot);
+      });
+    });
+
+    document.querySelector(".carousel-control-prev")?.addEventListener("click", () => {
+      showSpace(-1);
+    });
+
+    document.querySelector(".carousel-control-next")?.addEventListener("click", () => {
+      showSpace(1);
+    });
+
+    window.setInterval(() => {
+      showSpace(1);
+    }, 4500);
 
     const bookingForm = document.getElementById("bookingForm");
     const confirmation = document.getElementById("confirmation");
