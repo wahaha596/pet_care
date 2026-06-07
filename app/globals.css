@@ -731,18 +731,45 @@
       background: var(--bg);
     }
 
-    .reviews-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+    .reviews-carousel {
+      position: relative;
+      overflow: hidden;
+      padding: 6px 0 18px;
+      mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    }
+
+    .reviews-track {
+      display: flex;
+      width: max-content;
       gap: 18px;
+      animation: reviewsMarquee 38s linear infinite;
+      will-change: transform;
+    }
+
+    .reviews-carousel:hover .reviews-track {
+      animation-play-state: paused;
+    }
+
+    @keyframes reviewsMarquee {
+      from {
+        transform: translateX(0);
+      }
+
+      to {
+        transform: translateX(calc(-50% - 9px));
+      }
     }
 
     .review-card {
+      flex: 0 0 342px;
+      min-height: 260px;
       padding: 24px;
       background: var(--surface-strong);
       border: 1px solid rgba(20, 108, 99, 0.08);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
     }
 
     .review-rating {
@@ -772,6 +799,7 @@
     }
 
     .review-card p {
+      flex: 1;
       margin: 0 0 16px;
       color: var(--ink);
       font-size: 0.98rem;
@@ -785,6 +813,17 @@
     .review-card span {
       color: var(--muted);
       font-size: 0.9rem;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reviews-track {
+        animation: none;
+      }
+
+      .reviews-carousel {
+        overflow-x: auto;
+        mask-image: none;
+      }
     }
 
     .booking {
@@ -1203,8 +1242,7 @@
 
       .quick-grid,
       .services-grid,
-      .steps-grid,
-      .reviews-grid {
+      .steps-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
@@ -1251,13 +1289,21 @@
       .quick-grid,
       .services-grid,
       .steps-grid,
-      .reviews-grid,
       .contact-blocks,
       .booking-form-wide .form-grid,
       .time-pair,
       .arrival-pair,
       .form-grid {
         grid-template-columns: 1fr;
+      }
+
+      .reviews-carousel {
+        mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+      }
+
+      .review-card {
+        flex-basis: min(82vw, 340px);
+        min-height: 282px;
       }
 
       .carousel-stage {

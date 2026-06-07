@@ -4,6 +4,65 @@ import { useEffect, useState } from "react";
 
 const spaceIds = ["lounge", "bath", "cat"];
 
+const customerReviews = [
+  {
+    rating: "5.0",
+    label: "满星好评",
+    stars: "★★★★★",
+    text: "我家比熊以前很怕吹风，这里会先让它熟悉环境，再慢慢分段吹，回家后没有那种特别紧绷的状态。",
+    name: "林女士",
+    detail: "比熊犬 / 月度洗护会员",
+  },
+  {
+    rating: "4.9",
+    label: "接近满星",
+    stars: "★★★★★",
+    text: "猫洗最怕赶，他们家流程讲得很清楚，还会备注怕碰脚、怕噪音这些细节，第二次来明显顺很多。",
+    name: "周先生",
+    detail: "英短猫 / 安抚护理预约",
+  },
+  {
+    rating: "5.0",
+    label: "满星好评",
+    stars: "★★★★★",
+    text: "洗完不只是香，毛也很顺，店员会直接说哪里有小结、多久需要再梳一次，信息给得很实在。",
+    name: "陈女士",
+    detail: "柯基犬 / 护理洗护",
+  },
+  {
+    rating: "5.0",
+    label: "复购推荐",
+    stars: "★★★★★",
+    text: "第一次做贵宾造型前沟通了很久，修出来的长度刚好，不会为了好看牺牲狗狗活动舒适度。",
+    name: "许先生",
+    detail: "贵宾犬 / 精修造型",
+  },
+  {
+    rating: "4.9",
+    label: "细节到位",
+    stars: "★★★★★",
+    text: "我家老年犬站久了会累，护理师中间会让它休息，也会避开关节敏感的位置，整个过程很稳。",
+    name: "梁女士",
+    detail: "雪纳瑞 / 老年犬温和洗护",
+  },
+  {
+    rating: "5.0",
+    label: "环境安心",
+    stars: "★★★★★",
+    text: "犬猫分区真的很加分，猫咪不用一直听到狗叫声，到店前后都有状态反馈，接回家也没有应激。",
+    name: "沈女士",
+    detail: "布偶猫 / 猫咪专属洗护",
+  },
+  {
+    rating: "4.8",
+    label: "服务贴心",
+    stars: "★★★★★",
+    text: "洗护结束会拍照发护理重点，耳朵、脚垫、掉毛情况都说得清楚，比单纯洗干净更让人放心。",
+    name: "马先生",
+    detail: "柴犬 / 深层去浮毛",
+  },
+];
+
 export default function Home() {
   const [activePricePanel, setActivePricePanel] = useState("dogs");
   const [activeSpace, setActiveSpace] = useState("lounge");
@@ -408,37 +467,25 @@ export default function Home() {
                 <h2>真实到店口碑</h2>
                 <p>顾客更关注洗护效果、宠物状态和长期护理建议。</p>
               </div>
-              <div className="reviews-grid">
-                <article className="review-card">
-                  <div className="review-rating" aria-label="5星满分评价">
-                    <span>★★★★★</span>
-                    <b>5.0</b>
-                    <em>满星好评</em>
-                  </div>
-                  <p>“我家比熊以前很怕吹风，这里会先让它熟悉环境，再慢慢分段吹，回家后没有那种特别紧绷的状态。”</p>
-                  <strong>林女士</strong>
-                  <span>比熊犬 / 月度洗护会员</span>
-                </article>
-                <article className="review-card">
-                  <div className="review-rating" aria-label="4.9星接近满分评价">
-                    <span>★★★★☆</span>
-                    <b>4.9</b>
-                    <em>接近满星</em>
-                  </div>
-                  <p>“猫洗最怕赶，他们家流程讲得很清楚，还会备注怕碰脚、怕噪音这些细节，第二次来明显顺很多。”</p>
-                  <strong>周先生</strong>
-                  <span>英短猫 / 安抚护理预约</span>
-                </article>
-                <article className="review-card">
-                  <div className="review-rating" aria-label="5星满分评价">
-                    <span>★★★★★</span>
-                    <b>5.0</b>
-                    <em>满星好评</em>
-                  </div>
-                  <p>“洗完不只是香，毛也很顺，店员会直接说哪里有小结、多久需要再梳一次，信息给得很实在。”</p>
-                  <strong>陈女士</strong>
-                  <span>柯基犬 / 护理洗护</span>
-                </article>
+              <div className="reviews-carousel" aria-label="客户评价轮播">
+                <div className="reviews-track">
+                  {[...customerReviews, ...customerReviews].map((review, index) => (
+                    <article
+                      className="review-card"
+                      key={`${review.name}-${index}`}
+                      aria-hidden={index >= customerReviews.length}
+                    >
+                      <div className="review-rating" aria-label={`${review.rating}星评价`}>
+                        <span>{review.stars}</span>
+                        <b>{review.rating}</b>
+                        <em>{review.label}</em>
+                      </div>
+                      <p>“{review.text}”</p>
+                      <strong>{review.name}</strong>
+                      <span>{review.detail}</span>
+                    </article>
+                  ))}
+                </div>
               </div>
             </div>
           </section>
