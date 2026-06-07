@@ -81,7 +81,7 @@ export default function Home() {
               <div className="hero-grid">
                 <div className="hero-copy">
                   <span className="eyebrow">洗护 / 吹整 / 猫咪安抚护理 / 会员预约</span>
-                  <h1>洗护更安心</h1>
+                  <h1>洗护更放心</h1>
                   <p className="hero-desc">分区洗护，干净安心。</p>
                   <div className="cta-row">
                     <a className="btn btn-primary" href="#booking">立即预约</a>
