@@ -738,18 +738,45 @@
       background: var(--bg);
     }
 
-    .reviews-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+    .reviews-carousel {
+      position: relative;
+      overflow: hidden;
+      padding: 6px 0 18px;
+      mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    }
+
+    .reviews-track {
+      display: flex;
+      width: max-content;
       gap: 18px;
+      animation: reviewsMarquee 38s linear infinite;
+      will-change: transform;
+    }
+
+    .reviews-carousel:hover .reviews-track {
+      animation-play-state: paused;
+    }
+
+    @keyframes reviewsMarquee {
+      from {
+        transform: translateX(0);
+      }
+
+      to {
+        transform: translateX(calc(-50% - 9px));
+      }
     }
 
     .review-card {
+      flex: 0 0 342px;
+      min-height: 260px;
       padding: 24px;
       background: var(--surface-strong);
       border: 1px solid rgba(20, 108, 99, 0.08);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
     }
 
     .review-rating {
@@ -779,6 +806,7 @@
     }
 
     .review-card p {
+      flex: 1;
       margin: 0 0 16px;
       color: var(--ink);
       font-size: 0.98rem;
@@ -792,6 +820,17 @@
     .review-card span {
       color: var(--muted);
       font-size: 0.9rem;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reviews-track {
+        animation: none;
+      }
+
+      .reviews-carousel {
+        overflow-x: auto;
+        mask-image: none;
+      }
     }
 
     .booking {
@@ -1206,8 +1245,7 @@
 
       .quick-grid,
       .services-grid,
-      .steps-grid,
-      .reviews-grid {
+      .steps-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
@@ -1254,12 +1292,20 @@
       .quick-grid,
       .services-grid,
       .steps-grid,
-      .reviews-grid,
       .contact-blocks,
       .booking-form-wide .form-grid,
       .time-pair,
       .form-grid {
         grid-template-columns: 1fr;
+      }
+
+      .reviews-carousel {
+        mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+      }
+
+      .review-card {
+        flex-basis: min(82vw, 340px);
+        min-height: 282px;
       }
 
       .carousel-stage {
@@ -1660,37 +1706,149 @@
           <h2>真实到店口碑</h2>
           <p>顾客更关注洗护效果、宠物状态和长期护理建议。</p>
         </div>
-        <div class="reviews-grid">
-          <article class="review-card">
-            <div class="review-rating" aria-label="5星满分评价">
-              <span>★★★★★</span>
-              <b>5.0</b>
-              <em>满星好评</em>
-            </div>
-            <p>“我家比熊以前很怕吹风，这里会先让它熟悉环境，再慢慢分段吹，回家后没有那种特别紧绷的状态。”</p>
-            <strong>林女士</strong>
-            <span>比熊犬 / 月度洗护会员</span>
-          </article>
-          <article class="review-card">
-            <div class="review-rating" aria-label="4.9星接近满分评价">
-              <span>★★★★★</span>
-              <b>4.9</b>
-              <em>接近满星</em>
-            </div>
-            <p>“猫洗最怕赶，他们家流程讲得很清楚，还会备注怕碰脚、怕噪音这些细节，第二次来明显顺很多。”</p>
-            <strong>周先生</strong>
-            <span>英短猫 / 安抚护理预约</span>
-          </article>
-          <article class="review-card">
-            <div class="review-rating" aria-label="5星满分评价">
-              <span>★★★★★</span>
-              <b>5.0</b>
-              <em>满星好评</em>
-            </div>
-            <p>“洗完不只是香，毛也很顺，店员会直接说哪里有小结、多久需要再梳一次，信息给得很实在。”</p>
-            <strong>陈女士</strong>
-            <span>柯基犬 / 护理洗护</span>
-          </article>
+        <div class="reviews-carousel" aria-label="客户评价轮播">
+          <div class="reviews-track">
+            <article class="review-card">
+              <div class="review-rating" aria-label="5.0星评价">
+                <span>★★★★★</span>
+                <b>5.0</b>
+                <em>满星好评</em>
+              </div>
+              <p>“我家比熊以前很怕吹风，这里会先让它熟悉环境，再慢慢分段吹，回家后没有那种特别紧绷的状态。”</p>
+              <strong>林女士</strong>
+              <span>比熊犬 / 月度洗护会员</span>
+            </article>
+            <article class="review-card">
+              <div class="review-rating" aria-label="4.9星评价">
+                <span>★★★★★</span>
+                <b>4.9</b>
+                <em>接近满星</em>
+              </div>
+              <p>“猫洗最怕赶，他们家流程讲得很清楚，还会备注怕碰脚、怕噪音这些细节，第二次来明显顺很多。”</p>
+              <strong>周先生</strong>
+              <span>英短猫 / 安抚护理预约</span>
+            </article>
+            <article class="review-card">
+              <div class="review-rating" aria-label="5.0星评价">
+                <span>★★★★★</span>
+                <b>5.0</b>
+                <em>满星好评</em>
+              </div>
+              <p>“洗完不只是香，毛也很顺，店员会直接说哪里有小结、多久需要再梳一次，信息给得很实在。”</p>
+              <strong>陈女士</strong>
+              <span>柯基犬 / 护理洗护</span>
+            </article>
+            <article class="review-card">
+              <div class="review-rating" aria-label="5.0星评价">
+                <span>★★★★★</span>
+                <b>5.0</b>
+                <em>复购推荐</em>
+              </div>
+              <p>“第一次做贵宾造型前沟通了很久，修出来的长度刚好，不会为了好看牺牲狗狗活动舒适度。”</p>
+              <strong>许先生</strong>
+              <span>贵宾犬 / 精修造型</span>
+            </article>
+            <article class="review-card">
+              <div class="review-rating" aria-label="4.9星评价">
+                <span>★★★★★</span>
+                <b>4.9</b>
+                <em>细节到位</em>
+              </div>
+              <p>“我家老年犬站久了会累，护理师中间会让它休息，也会避开关节敏感的位置，整个过程很稳。”</p>
+              <strong>梁女士</strong>
+              <span>雪纳瑞 / 老年犬温和洗护</span>
+            </article>
+            <article class="review-card">
+              <div class="review-rating" aria-label="5.0星评价">
+                <span>★★★★★</span>
+                <b>5.0</b>
+                <em>环境安心</em>
+              </div>
+              <p>“犬猫分区真的很加分，猫咪不用一直听到狗叫声，到店前后都有状态反馈，接回家也没有应激。”</p>
+              <strong>沈女士</strong>
+              <span>布偶猫 / 猫咪专属洗护</span>
+            </article>
+            <article class="review-card">
+              <div class="review-rating" aria-label="4.8星评价">
+                <span>★★★★★</span>
+                <b>4.8</b>
+                <em>服务贴心</em>
+              </div>
+              <p>“洗护结束会拍照发护理重点，耳朵、脚垫、掉毛情况都说得清楚，比单纯洗干净更让人放心。”</p>
+              <strong>马先生</strong>
+              <span>柴犬 / 深层去浮毛</span>
+            </article>
+            <article class="review-card" aria-hidden="true">
+              <div class="review-rating" aria-label="5.0星评价">
+                <span>★★★★★</span>
+                <b>5.0</b>
+                <em>满星好评</em>
+              </div>
+              <p>“我家比熊以前很怕吹风，这里会先让它熟悉环境，再慢慢分段吹，回家后没有那种特别紧绷的状态。”</p>
+              <strong>林女士</strong>
+              <span>比熊犬 / 月度洗护会员</span>
+            </article>
+            <article class="review-card" aria-hidden="true">
+              <div class="review-rating" aria-label="4.9星评价">
+                <span>★★★★★</span>
+                <b>4.9</b>
+                <em>接近满星</em>
+              </div>
+              <p>“猫洗最怕赶，他们家流程讲得很清楚，还会备注怕碰脚、怕噪音这些细节，第二次来明显顺很多。”</p>
+              <strong>周先生</strong>
+              <span>英短猫 / 安抚护理预约</span>
+            </article>
+            <article class="review-card" aria-hidden="true">
+              <div class="review-rating" aria-label="5.0星评价">
+                <span>★★★★★</span>
+                <b>5.0</b>
+                <em>满星好评</em>
+              </div>
+              <p>“洗完不只是香，毛也很顺，店员会直接说哪里有小结、多久需要再梳一次，信息给得很实在。”</p>
+              <strong>陈女士</strong>
+              <span>柯基犬 / 护理洗护</span>
+            </article>
+            <article class="review-card" aria-hidden="true">
+              <div class="review-rating" aria-label="5.0星评价">
+                <span>★★★★★</span>
+                <b>5.0</b>
+                <em>复购推荐</em>
+              </div>
+              <p>“第一次做贵宾造型前沟通了很久，修出来的长度刚好，不会为了好看牺牲狗狗活动舒适度。”</p>
+              <strong>许先生</strong>
+              <span>贵宾犬 / 精修造型</span>
+            </article>
+            <article class="review-card" aria-hidden="true">
+              <div class="review-rating" aria-label="4.9星评价">
+                <span>★★★★★</span>
+                <b>4.9</b>
+                <em>细节到位</em>
+              </div>
+              <p>“我家老年犬站久了会累，护理师中间会让它休息，也会避开关节敏感的位置，整个过程很稳。”</p>
+              <strong>梁女士</strong>
+              <span>雪纳瑞 / 老年犬温和洗护</span>
+            </article>
+            <article class="review-card" aria-hidden="true">
+              <div class="review-rating" aria-label="5.0星评价">
+                <span>★★★★★</span>
+                <b>5.0</b>
+                <em>环境安心</em>
+              </div>
+              <p>“犬猫分区真的很加分，猫咪不用一直听到狗叫声，到店前后都有状态反馈，接回家也没有应激。”</p>
+              <strong>沈女士</strong>
+              <span>布偶猫 / 猫咪专属洗护</span>
+            </article>
+            <article class="review-card" aria-hidden="true">
+              <div class="review-rating" aria-label="4.8星评价">
+                <span>★★★★★</span>
+                <b>4.8</b>
+                <em>服务贴心</em>
+              </div>
+              <p>“洗护结束会拍照发护理重点，耳朵、脚垫、掉毛情况都说得清楚，比单纯洗干净更让人放心。”</p>
+              <strong>马先生</strong>
+              <span>柴犬 / 深层去浮毛</span>
+            </article>
+          </div>
         </div>
       </div>
     </section>
